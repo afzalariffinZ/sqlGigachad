@@ -14,7 +14,7 @@ In this project, I will break down the login/registration into several parts:
 
 There are a total of 5 currently, and I will add more
 
-**NOTE: YOU ALSO HAVE TO INSTALL
+**NOTE: YOU ALSO HAVE TO INSTALL THESE DEPENDENCIES AND SOFTWARE in order to run the file**
 - mysql-connector-java-8.0.30.jar
 - XAMPP with your own localhost
-in order to run the file**
+
