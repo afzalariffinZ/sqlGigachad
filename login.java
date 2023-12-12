@@ -17,26 +17,42 @@ public class login {
 
             // checking the database whether email or username inserted by user has existed
             // or not
+            boolean emailExist = false;
+            boolean usernameExist = false;
+            boolean passwordExist = false;
+
+
             ResultSet check = statement.executeQuery("select * from idtest");
             while (check.next()) {
                 if (check.getString(2).equals(email) ) {
+                    emailExist = true;
                     if(check.getString(3).equals(username)){
+                        usernameExist = true;
                         if(check.getString(4).equals(password)){
-                            System.out.println("Welcome back "+username+"!");  
-                            return;
-                        }else{
-                            System.out.println("Incorrect password, please try again!");  
-                            return;
+                            passwordExist = true;
                         }
-                    }else{
-                        System.out.println("Username not found. Are you in the right mode?");
-                        return;
                     }
-                }else{
-                    System.out.println("No email found, please register an account if you don't have an account!");
-                    return;
                 }
             }
+
+            if(emailExist){
+                if(usernameExist){
+                    if(passwordExist){
+                        System.out.println("Welcome back "+username+"!");  
+                    }else{
+                        System.out.println("Incorrect password, please try again!");  
+                    }
+                }else{
+                    System.out.println("Username not found. Are you in the right mode?");
+                }
+            }else{
+                System.out.println("No email found, please register an account if you don't have an account!");
+            }
+
+
+
+
+
             
             
 
