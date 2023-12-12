@@ -49,13 +49,6 @@ public class login {
                 System.out.println("No email found, please register an account if you don't have an account!");
             }
 
-
-
-
-
-            
-            
-
         }catch(SQLException e){
             e.printStackTrace();
         }finally{
