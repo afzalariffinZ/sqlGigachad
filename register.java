@@ -14,6 +14,9 @@ public class register {
         String user = "root";
         String pass = "";
 
+
+        email = email.trim();
+        username = username.trim();
         try (
             Connection connect = DriverManager.getConnection(url, user, pass);
             Statement statement = connect.createStatement()) { // connecting to the database
