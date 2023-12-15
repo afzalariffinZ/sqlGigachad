@@ -30,11 +30,11 @@ public class ShoppingCartt {
         String password ="";
         String query ="SELECT * FROM shopping_cart where username=Username";
         
-       try{
-           Class.forName("com.mysql.cj.jdbc.Driver");
-       } catch(ClassNotFoundException e){
-           e.printStackTrace();
-       }
+//       try{
+//           Class.forName("com.mysql.cj.jdbc.Driver");
+//       } catch(ClassNotFoundException e){
+//           e.printStackTrace();
+//       }
        try{
            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test69", "root", "");
           Statement statement = con.createStatement();
