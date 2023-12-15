@@ -2,9 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package javaapplication2;
-
-
+package code;
 
 /**
  *
@@ -28,8 +26,7 @@ public class ShoppingCart {
        try {
             
             AddtoCart("afzal","ikan");
-            DisplayCart("afzal");
-            addExistingItem("afzal","ikan");
+            replaceExistingItem("afzal","ikan");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,12 +41,48 @@ public class ShoppingCart {
           String query ="SELECT * FROM shopping_cart where username=Username";
           ResultSet result= statement.executeQuery(query);
           while (result.next()) {
-                if (result.getString(1).equals(username) && result.getString(2) == Item_code) {
-                    System.out.print("Enter the quantity that you wish to add: ");
-                    int x = result.getInt(3)+scan.nextInt();
-                    String insertQuery = "INSERT INTO shopping_cart (Item_quantity) VALUES (?)";
+              
+                if (result.getString(2).equals(username) && result.getString(3).equals(Item_code)) {
+                    
+                    System.out.print("Please enter the quantity that you wish to add into the existing product: ");
+                    int x =scan.nextInt();
+                    String insertQuery = "UPDATE shopping_cart SET Item_quantity = Item_quantity + ? WHERE Item_code = ?";
                     PreparedStatement preparedStatement = connect.prepareStatement(insertQuery);
-                    preparedStatement.setInt(3, x);
+                    preparedStatement.setInt(1, x);
+                    preparedStatement.setString(2,Item_code);
+                    int rowsAffected = preparedStatement.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println("Quantity(s) updated to cart successfully.");
+                    } else {
+                        System.out.println("Failed to update to cart.");
+                    }
+                    
+                    return;
+                }
+            }
+       }catch(SQLException e){
+           e.printStackTrace();
+       }
+        
+    }
+    
+    public static void replaceExistingItem(String username, String Item_code){
+        
+        try{
+          Connection connect = DriverManager.getConnection(url,user,pass);
+          Statement statement = connect.createStatement();
+          String query ="SELECT * FROM shopping_cart where username=Username";
+          ResultSet result= statement.executeQuery(query);
+          while (result.next()) {
+              
+                if (result.getString(2).equals(username) && result.getString(3).equals(Item_code)) {
+                    
+                    System.out.print("Please enter the quantity that you wish to replace into the existing product: ");
+                    int x =scan.nextInt();
+                    String insertQuery = "UPDATE shopping_cart SET Item_quantity = ? WHERE Item_code = ?";
+                    PreparedStatement preparedStatement = connect.prepareStatement(insertQuery);
+                    preparedStatement.setInt(1, x);
+                    preparedStatement.setString(2,Item_code);
                     int rowsAffected = preparedStatement.executeUpdate();
                     if (rowsAffected > 0) {
                         System.out.println("Quantity(s) updated to cart successfully.");
@@ -88,7 +121,7 @@ public class ShoppingCart {
 
     }
     
-    public static void AddtoCart(String username ,String item){
+    public static void AddtoCart(String username ,String Item_code) throws SQLException{
 
 
         System.out.print(" Type The Quantity : ");
@@ -96,17 +129,26 @@ public class ShoppingCart {
         int quantity= scan.nextInt();
         
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass)) {
-            
-            
+        try (Connection connect = DriverManager.getConnection(url, user, pass)) {
+            Statement statement = connect.createStatement();
+            String query ="SELECT * FROM shopping_cart where username=Username";
+            ResultSet result = statement.executeQuery(query);
+            while (result.next()) {
+                if (result.getString(2).equals(username) && result.getString(3).equals(Item_code)){
+                    System.out.println("The product that you want to add has already existed.");
+                    addExistingItem(username, Item_code);
+                    return;
+                }
+                
+            }
             
             String insertQuery = "INSERT INTO shopping_cart (Username,Item_code,Item_quantity) VALUES ( ?,?,?)";
-            PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
+            PreparedStatement preparedStatement = connect.prepareStatement(insertQuery);
 
             // Set the values for the parameters in the prepared statement
             
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, item);
+            preparedStatement.setString(2, Item_code);
             preparedStatement.setInt(3, quantity);
 
             // Execute the query
@@ -121,4 +163,3 @@ public class ShoppingCart {
         }
     }
 }
-
